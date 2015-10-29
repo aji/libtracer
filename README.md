@@ -2,8 +2,7 @@
 
 libtracer is a library that makes it easy to include trace-level debug logs in
 production systems by storing a configurable number of recent entries in an
-on-disk ring buffer. The ring buffer size can be limited by entry count or by
-an amount of time.
+on-disk ring buffer. The ring buffer size can be limited by entry count.
 
 This means that you can trace freely without worrying about cluttering your
 main logs or using valuable disk space. If an unexpected crash happens, you
@@ -28,7 +27,6 @@ significantly.
 void tracer_config_default(tracer_config_t*);
 void tracer_config_set_path(tracer_config_t*, const char *path);
 void tracer_config_set_max_entries(tracer_config_t*, long max_entries);
-void tracer_config_set_max_seconds(tracer_config_t*, long max_seconds);
 
 void tracer_start(tracer_t*, tracer_config_t*);
 
@@ -48,11 +46,11 @@ tracer_t my_tracer;
 int main(int argc, char *argv[]) {
         tracer_config_default(&my_tracer_config);
         tracer_config_set_path(&my_tracer_config, "tracer.log");
-        tracer_config_set_max_seconds(&my_tracer_config, 60);
+        tracer_config_set_max_entries(&my_tracer_config, 1000);
 
         tracer_start(&my_tracer, &my_tracer_config);
 
-        tracer(&my_tracer, "opened tracer with %d seconds", 60);
+        tracer(&my_tracer, "opened tracer with %d entries", 1000);
 
         ...
 
